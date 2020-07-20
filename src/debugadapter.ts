@@ -1795,8 +1795,8 @@ export class DebugSessionClass extends DebugSession {
 "-eval expr": Evaluates an expression. The expression might contain
 mathematical expressions and also labels. It will also return the label if
 the value correspondends to a label.
-"-exec|e [-view] cmd args": cmd and args are directly passed to ZEsarUX. E.g. "-exec get-registers". If you add "-view" the output will go into a new view instead of the console.
-"-help|h": This command. Do "-e help" to get all possible ZEsarUX commands.
+"-exec|e [-view] cmd args": cmd and args are directly passed to ZEsarUX/OpenMSX. E.g. "-exec get-registers". If you add "-view" the output will go into a new view instead of the console.
+"-help|h": This command. Do "-e help" to get all possible ZEsarUX/OpenMSX commands.
 "-label|-l XXX": Returns the matching labels (XXX) with their values. Allows wildcard "*".
 "-LOGPOINT enable|disable|status [group]":
 	- enable|disable: Enables/disables all logpoints caused by LOGPOINTs of a certain group set in the sources. If no group is given all logpoints are affected. All logpoints are by default disabled after startup of the debugger.

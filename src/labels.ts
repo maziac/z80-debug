@@ -152,7 +152,8 @@ export class LabelsClass {
 			}
 			const search = filterArr[1];
 			replace = filterArr[2];
-			filterRegEx = new RegExp(search);
+
+			filterRegEx = new RegExp(search,'i');
 		}
 
 		// Check for sjasmplus or z88dk.
@@ -210,8 +211,36 @@ export class LabelsClass {
 				line = line.replace(sjasmZ88dkRegex, '');
 			}
 			// Filter line
-			if(filterRegEx)
-				line=line.replace(filterRegEx, replace);
+			if(filterRegEx) {
+				if (replace.length>0){
+					line = line.replace (filterRegEx,replace);
+				} else {
+					line=line.replace(filterRegEx, function (match:string, address:string, bytes:string, mnemonic:string):string {
+						console.log (match);
+						bytes = bytes.split ('\t').join(' ');
+						bytes = bytes.trim();
+						let bytearray = bytes.split (' ');
+						let newbytes="";
+						let first = true;
+						let bcount = 0;
+						for (let b of bytearray) {
+							if (first) {
+								first = false;
+							} else {
+								newbytes=newbytes+' ';
+							}
+							newbytes=newbytes+b;
+							bcount++;
+							if (bcount>=4)
+								break;
+						}
+						let bspacer = "            ";
+						newbytes = newbytes+bspacer.substring (0,12-newbytes.length);
+						return `${address} ${newbytes} ${mnemonic}`;
+					});
+				}
+			}
+
 
 			// Check if valid line (not "~")
 			if (sjasmplus) {

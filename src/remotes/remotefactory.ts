@@ -4,6 +4,7 @@ import {ZxNextUsbSerialRemote} from './zxnext/zxnextusbserialremote';
 import {ZxSimulatorRemote} from './zxsimulator/zxsimremote';
 //import {ZxNextSocketRemote} from './zxnext/zxnextsocketremote';
 import {CSpectRemote} from './zxnext/cspectremote';
+import {OpenMSXRemote} from './openmsx/openmsxremote';
 import {Utility} from '../misc/utility';
 
 
@@ -33,6 +34,9 @@ export class RemoteFactory {
 				break;
 			case 'mame':
 				Utility.assert(false);	// needs to be implemented
+				break;
+			case 'openmsx':
+				RemoteFactory.setRemote (new OpenMSXRemote());
 				break;
 			default:
 				Utility.assert(false);

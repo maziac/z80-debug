@@ -51,6 +51,7 @@ The default for Windows is 100 (ms). If you run into this problem you can try to
 
 ## Features
 
+- supports [OpenMSX](https://github.com/openMSX) emulator (>= v0.15)
 - supports [ZEsarUX](https://github.com/chernandezba/zesarux) emulator (>= v8.1)
 - supports [CSpect](http://www.cspect.org) emulator (>= v2.12.26)
 - can be used with the internal simulator (does not require ZEsarUX or CSpect))

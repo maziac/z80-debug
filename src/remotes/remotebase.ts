@@ -118,6 +118,9 @@ export class RemoteBase extends EventEmitter {
 	/// The logpoints can be enabled/disabled per group.
 	public logpointsEnabled=new Map<string, boolean>();
 
+	/// In which slot,subslot,bank/segment the PC should be for an OpenMSX debug session
+	protected pcInSlot:string="";
+
 
 	/// Constructor.
 	/// Override this.
@@ -415,6 +418,7 @@ export class RemoteBase extends EventEmitter {
 				addOffset: listFile.addOffset||0,
 				z88dkMapFile: listFile.z88dkMapFile
 			};
+			this.pcInSlot = listFile.pcInSlot;
 			Labels.loadAsmListFile(file.path, file.mainFile, file.srcDirs, file.filter, file.asm, file.addOffset, (address, line) => {
 				// Quick search for WPMEM
 				if (line.indexOf('WPMEM')>=0) {

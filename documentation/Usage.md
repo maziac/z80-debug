@@ -71,6 +71,7 @@ A typical configuration looks like this:
 - remoteType: For DeZog to work it is necessary to connect it to some 'Remote'. This can be an emulator like ZEsarUX, the internal Z80 simulator or real ZX Next HW connected via serial interface (Note: the serial interface is currently under evelopment).
     - "zsim": Use the internal simulator. See [Internal Z80 Simulator](#the-internal-z80-simulator).
     - "zrcp": Use ZEsarUX through the ZRCP (ZEsarUX Remote Control Protocol) via a socket. See [ZEsarUX](#zesarux).
+    - "openmsx": Use OpenMSX as MSX emulator.
     - "serial": Use a (USB-) serial connection connected to the UART of the ZX Next. See [Serial Interface](#serial-interface).
 - listFiles: An array of list files. Typically it includes only one. But if you e.g. have a
 list file also for the ROM area you can add it here.
@@ -264,6 +265,7 @@ They are distinguished via the "remoteType":
 - "zsim": Internal Z80 Simulator
 - "zrcp": ZEsarUX (or ZesaruxExt) emulator
 - "cspect": CSpect emulator
+- "openmsx": OpenMSX emulator
 <!--
 - "serial": ZX Next connected via serial.
 -->
@@ -285,20 +287,20 @@ Via a USB-to-Serial Interface the serial data is available e.g. at /dev/tty.usbs
 The different Remotes have different capabilities in conjunction with DeZog.
 The following table gives an overview.
 
-|                      | Internal Z80 Simulator | ZEsarUX | ZesaruxExt | ZX Next  | CSpect  |
-|-------------------------|--------------------|---------|------------|----------|----------|
-| State                   | stable             | stable  | stable     | started  | stable |
-| Breakpoints             | yes                | yes     | yes/fast   | yes      | yes      |
-| Conditional Breakpoints | yes                | yes     | yes/fast   | yes/slow | yes/slow |
-| Watchpoints             | yes                | yes     | yes/fast   | no        | no      |
-| Asserts                 | yes                | no       | yes        | yes/slow | yes/slow |
-| Logpoints               | yes                | no       | yes        | yes/slow | yes/slow |
-| Extended callstack      | no                 | yes     | yes        | no        | no        |
-| Code coverage           | yes                | yes     | yes        | no        | no        |
-| Reverse debugging       | true               | true    | true       | lite     | lite     |
-| ZX Next capable         | no                  | yes     | yes        | yes      | yes      |
-| Save/restore the state | yes                 | yes     | yes        | no       | no       |
-| Output of T-States | yes                 | yes     | yes        | no       | no       |
+|                      | Internal Z80 Simulator | ZEsarUX | ZesaruxExt | ZX Next  | CSpect  | OpenMSX |
+|-------------------------|--------------------|---------|------------|----------|----------|---------|
+| State                   | stable             | stable  | stable     | started  | stable | stable  |
+| Breakpoints             | yes                | yes     | yes/fast   | yes      | yes      | yes     |
+| Conditional Breakpoints | yes                | yes     | yes/fast   | yes/slow | yes/slow | yes     |
+| Watchpoints             | yes                | yes     | yes/fast   | no        | no      | no      |
+| Asserts                 | yes                | no       | yes        | yes/slow | yes/slow | yes     |
+| Logpoints               | yes                | no       | yes        | yes/slow | yes/slow | no      |
+| Extended callstack      | no                 | yes     | yes        | no        | no        | no      |
+| Code coverage           | yes                | yes     | yes        | no        | no        | no      |
+| Reverse debugging       | true               | true    | true       | lite     | lite     | no      |
+| ZX Next capable         | no                  | yes     | yes        | yes      | yes      | N/A     |
+| Save/restore the state | yes                 | yes     | yes        | no       | no       | yes     |
+| Output of T-States | yes                 | yes     | yes        | no       | no       | no      |
 | Comments                | slower than ZEsarUx or CSpect   |         | Breakpoints are faster than in ZEsarUX |         |
 
 Notes:
@@ -601,8 +603,43 @@ Example launch.json configuration:
     ???
 ~~~
 
+### OpenMSX
 
-## Usage
+Here DeZog connects via the socket directly to OpenMSX. It finds the PID to the running process in the TEMP directory as specified by OpenMSX.
+
+~~~
+┌───────────────┐              ┌─────────────────┐          ┌────────────────────┐
+│               │              │                 │          │                    │
+│               │              │                 │          │                    │
+│               │              │                 │          │                    │
+│    vscode     │              │      DeZog      │          │      OpenMSX       │
+│               │◀─────────────│                 │◀─────────│                    │
+│               │              │                 │          │                    │
+│               │              │                 │          │                    │
+│               │              │                 │          |                    |
+└───────────────┘              └─────────────────┘          └────────────────────┘
+~~~
+
+Although MSX-es are not Spectrum devices they do have a Z80. As a result debugging is mostly the same as on a ZX device.
+
+Use -e <any command>  in the Debug Console from within VSCode to run any command you would normally run in the OpenMSX console.
+
+Examples:
+```
+    -e openmsx_info version
+    -e cpuregs
+    -e diska insert <filename>
+    -e cart insert <filename>
+```
+If you debug .COM applications it is best to mount a disk in OpenMSX with an autoexec.bat file that starts it automatically. This way after boot you hit any breakpoints you set and don't need to type any commands before you do a debug session.
+
+If you debug .BIN application do the same with an autoexec.bas file.
+
+.ROM applications boot automatically of course.
+
+You can use the commandsAfterLaunch property in launch.json to automatically mount a disk or insert a ROM. Please specify it here as you would do it in the Debug Console.
+
+### Usage
 
 If you use any Remote other than the internal Simulator please make sure that it is started before you start the debug session with DeZog.
 
@@ -625,8 +662,6 @@ You can now try the following:
 - step-over, step-in etc.
 - click in the call stack -> will navigate you directly to the file
 - set breakpoints, press continue to run to the breakpoints
-
-
 
 
 ### Reverse Debugging

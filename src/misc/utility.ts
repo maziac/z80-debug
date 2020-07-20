@@ -564,12 +564,12 @@ export class Utility {
 					// interprete byte as Z80 flags:
 					// Zesarux: (e.g. "SZ5H3PNC")
 					// S Z X H X P/V N C
-					var res = (usedValue&0x80)? 'S' : '';	// S=sign
-					res += (usedValue&0x40)? 'Z' : '';	// Z=zero
-					res += (usedValue&0x10)? 'H' : '';	// H=Half Carry
-					res += (usedValue&0x04)? 'P' : '';	// P/V=Parity/Overflow
-					res += (usedValue&0x02)? 'N' : '';	// N=Add/Subtract
-					res += (usedValue&0x01)? 'C' : '';	// C=carry
+					var res = (usedValue&0x80)? 'S' : '.';	// S=sign
+					res += (usedValue&0x40)? 'Z ' : 'NZ';	// Z=zero
+					res += (usedValue&0x10)? 'H' : '.';	// H=Half Carry
+					res += (usedValue&0x04)? 'P' : '.';	// P/V=Parity/Overflow
+					res += (usedValue&0x02)? 'N' : '.';	// N=Add/Subtract
+					res += (usedValue&0x01)? 'C ' : 'NC';	// C=carry
 					return res + restP;
 
 				case 'labels':
